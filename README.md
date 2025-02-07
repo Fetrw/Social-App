@@ -2,6 +2,8 @@
 
 A modern social network application built with React, TypeScript, and Zustand. This application demonstrates a full-featured social networking experience with a clean and responsive user interface.
 
+# [DEMO](https://social-app-dusky-one.vercel.app/)
+
 ## Features
 
 - **User Authentication**
