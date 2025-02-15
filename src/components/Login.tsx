@@ -1,6 +1,6 @@
 import { useStore } from "../store";
 
-export function Login() {
+export const Login = () => {
   const { users, setCurrentUser } = useStore();
 
   return (
@@ -29,4 +29,4 @@ export function Login() {
       </div>
     </div>
   );
-}
+};

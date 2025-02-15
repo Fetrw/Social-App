@@ -3,7 +3,7 @@ import { Heart, MessageCircle, Hash } from "lucide-react";
 import { useStore } from "../store";
 import { Comment } from "../types";
 
-export function PostList() {
+export const PostList = () => {
   const { posts, users, currentUser, toggleLike, addComment, votePoll } =
     useStore();
   const [commentText, setCommentText] = useState<{ [key: string]: string }>({});
@@ -264,4 +264,4 @@ export function PostList() {
       </div>
     </div>
   );
-}
+};

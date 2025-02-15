@@ -6,7 +6,7 @@ interface ProfileProps {
   userId: string;
 }
 
-export function Profile({ userId }: ProfileProps) {
+export const Profile = ({ userId }: ProfileProps) => {
   const { users, posts } = useStore();
   const user = users.find((u) => u.id === userId);
   const userPosts = posts.filter((post) => post.userId === userId);
@@ -67,4 +67,4 @@ export function Profile({ userId }: ProfileProps) {
       </div>
     </div>
   );
-}
+};

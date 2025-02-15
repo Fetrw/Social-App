@@ -1,7 +1,7 @@
 import { LogOut, User as UserIcon, Sun, Moon } from "lucide-react";
 import { useStore } from "../store";
 
-export function Header() {
+export const Header = () => {
   const { currentUser, setCurrentUser, theme, toggleTheme } = useStore();
 
   return (
@@ -47,4 +47,4 @@ export function Header() {
       </div>
     </header>
   );
-}
+};

@@ -3,7 +3,7 @@ import { Image as ImageIcon, Send, Hash, BarChart2 } from "lucide-react";
 import { useStore } from "../store";
 import { Post } from "../types";
 
-export function CreatePost() {
+export const CreatePost = () => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
   const [tags, setTags] = useState("");
@@ -159,4 +159,4 @@ export function CreatePost() {
       </div>
     </form>
   );
-}
+};

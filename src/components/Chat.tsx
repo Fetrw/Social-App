@@ -7,7 +7,7 @@ interface ChatProps {
   userId: string;
 }
 
-export function Chat({ userId }: ChatProps) {
+export const Chat = ({ userId }: ChatProps) => {
   const { users, currentUser, chats, sendMessage } = useStore();
   const [message, setMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -93,4 +93,4 @@ export function Chat({ userId }: ChatProps) {
       </form>
     </div>
   );
-}
+};
