@@ -18,7 +18,7 @@ export const Login = () => {
             <img
               src={user.avatar}
               alt={user.name}
-              className="w-12 h-12 rounded-full"
+              className="w-12 h-12 object-cover rounded-full"
             />
             <div className="text-left">
               <h3 className="font-medium">{user.name}</h3>

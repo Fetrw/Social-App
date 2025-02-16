@@ -51,3 +51,14 @@ export interface Chat {
   participants: string[];
   messages: Message[];
 }
+
+export interface Notification {
+  id: string;
+  userId: string;
+  type: "message" | "like" | "comment";
+  fromUserId: string;
+  postId?: string;
+  messageId?: string;
+  read: boolean;
+  createdAt: string;
+}

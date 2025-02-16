@@ -6,48 +6,91 @@ A modern social network application built with React, TypeScript, and Zustand. T
 
 ## Features
 
-- **User Authentication**
-  - Multiple user profiles
-  - Profile switching
-  - Secure session management
+### User Management
+- **Multiple User Profiles**
+  - Switch between different user accounts
+  - Personalized experience for each user
+  - Automatic redirection to home page on account switch
 
-- **Posts**
+### Posts and Interactions
+- **Rich Post Creation**
   - Create text posts with images
   - Add tags to posts
   - Create polls with multiple options
-  - Like and comment on posts
   - Rich text formatting
 
-- **Profiles**
-  - View user profiles
-  - See user's posts
-  - Profile information (location, website, join date)
-  - Profile customization
-
-- **Real-time Chat**
-  - Direct messaging between users
-  - Message history
-  - Real-time updates
-  - Chat notifications
-
-- **Search & Discovery**
-  - Search posts by content
+- **Interactive Features**
+  - Like and comment on posts
+  - Vote in polls
   - Filter posts by tags
-  - Discover users
+  - Search through posts
 
-- **Theme Support**
+### Real-time Communication
+- **Messaging System**
+  - Direct messaging between users
+  - Chat history preservation
+  - Real-time message updates
+  - Contact list management
+  - Quick access to recent conversations
+
+### Notifications
+- **Real-time Notifications**
+  - New message alerts
+  - Like notifications
+  - Comment notifications
+  - Unread count indicator
+  - Mark as read functionality
+
+### Profile Features
+- **Detailed User Profiles**
+  - Profile information display
+  - User's posts collection
+  - Activity history
+  - Profile customization
+  - Location and website links
+
+### Search & Discovery
+- **Advanced Search**
+  - Search posts by content
+  - Filter by tags
+  - Discover users
+  - Find conversations
+
+### Theme Support
+- **Customizable Interface**
   - Light/Dark mode toggle
   - Persistent theme preference
   - Responsive design
+  - Accessible UI elements
 
 ## Technology Stack
 
 - **Frontend Framework**: React
 - **Language**: TypeScript
-- **State Management**: Zustand
+- **State Management**: Zustand with persistence
 - **Styling**: Tailwind CSS
 - **Icons**: Lucide React
 - **Build Tool**: Vite
+- **Date Handling**: date-fns
+
+## Project Structure
+
+```
+src/
+├── components/        # React components
+│   ├── Chat.tsx         # Chat interface
+│   ├── ChatsPage.tsx    # Chats overview
+│   ├── CreatePost.tsx   # Post creation
+│   ├── Header.tsx       # App header with notifications
+│   ├── Login.tsx        # User authentication
+│   ├── PostList.tsx     # Posts display
+│   └── Profile.tsx      # User profiles
+├── store/            # Zustand store
+│   └── index.ts        # State management
+├── types/            # TypeScript definitions
+├── App.tsx           # Main application
+└── main.tsx         # Entry point
+```
 
 ## Getting Started
 
@@ -62,16 +105,33 @@ A modern social network application built with React, TypeScript, and Zustand. T
    ```
 4. Open your browser and navigate to `http://localhost:5173`
 
-## Project Structure
+## Features in Detail
 
-```
-src/
-├── components/        # React components
-├── store/            # Zustand store and state management
-├── types/            # TypeScript type definitions
-├── App.tsx           # Main application component
-└── main.tsx         # Application entry point
-```
+### Notifications System
+- Real-time notifications for:
+  - New messages
+  - Post likes
+  - Comments on posts
+- Notification center in the header
+- Unread count indicator
+- Click-through to relevant content
+- Mark as read functionality
+
+### Chat System
+- Direct messaging between users
+- Chat history preservation
+- Real-time updates
+- Contact list
+- Online status indicators
+- Message notifications
+
+### Post Management
+- Create rich text posts
+- Add images to posts
+- Tag posts for categorization
+- Create polls with multiple options
+- Like and comment system
+- Search and filter functionality
 
 ## Contributing
 

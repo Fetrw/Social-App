@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { User, Post, Poll, Chat } from "./types";
+import { User, Post, Chat, Notification } from "./types";
 
 interface SocialState {
   currentUser: User | null;
   users: User[];
   posts: Post[];
   chats: Chat[];
+  notifications: Notification[];
   theme: "light" | "dark";
   setCurrentUser: (user: User | null) => void;
   addUser: (user: User) => void;
@@ -17,6 +17,10 @@ interface SocialState {
   toggleTheme: () => void;
   votePoll: (postId: string, optionId: string, userId: string) => void;
   sendMessage: (fromUserId: string, toUserId: string, content: string) => void;
+  addNotification: (notification: Notification) => void;
+  markNotificationAsRead: (notificationId: string) => void;
+  markAllNotificationsAsRead: (userId: string) => void;
+  clearUserNotifications: () => void;
 }
 
 // Mock initial data
@@ -107,6 +111,7 @@ const initialPosts: Post[] = [
 ];
 
 const initialChats: Chat[] = [];
+const initialNotifications: Notification[] = [];
 
 export const useStore = create<SocialState>()(
   persist(
@@ -115,31 +120,84 @@ export const useStore = create<SocialState>()(
       users: initialUsers,
       posts: initialPosts,
       chats: initialChats,
+      notifications: initialNotifications,
       theme: "light",
-      setCurrentUser: (user) => set({ currentUser: user }),
+      setCurrentUser: (user) => set({ currentUser: user, view: "feed" }),
       addUser: (user) => set((state) => ({ users: [...state.users, user] })),
       addPost: (post) => set((state) => ({ posts: [post, ...state.posts] })),
       toggleLike: (postId, userId) =>
-        set((state) => ({
-          posts: state.posts.map((post) =>
-            post.id === postId
-              ? {
-                  ...post,
-                  likes: post.likes.includes(userId)
-                    ? post.likes.filter((id) => id !== userId)
-                    : [...post.likes, userId],
-                }
-              : post
-          ),
-        })),
+        set((state) => {
+          const post = state.posts.find((p) => p.id === postId);
+          const isLiking = post && !post.likes.includes(userId);
+
+          if (isLiking && post) {
+            const notification: Notification = {
+              id: Date.now().toString(),
+              userId: post.userId,
+              type: "like",
+              fromUserId: userId,
+              postId,
+              read: false,
+              createdAt: new Date().toISOString(),
+            };
+            return {
+              posts: state.posts.map((post) =>
+                post.id === postId
+                  ? {
+                      ...post,
+                      likes: post.likes.includes(userId)
+                        ? post.likes.filter((id) => id !== userId)
+                        : [...post.likes, userId],
+                    }
+                  : post
+              ),
+              notifications: [...state.notifications, notification],
+            };
+          }
+
+          return {
+            posts: state.posts.map((post) =>
+              post.id === postId
+                ? {
+                    ...post,
+                    likes: post.likes.includes(userId)
+                      ? post.likes.filter((id) => id !== userId)
+                      : [...post.likes, userId],
+                  }
+                : post
+            ),
+          };
+        }),
       addComment: (postId, comment) =>
-        set((state) => ({
-          posts: state.posts.map((post) =>
-            post.id === postId
-              ? { ...post, comments: [...post.comments, comment] }
-              : post
-          ),
-        })),
+        set((state) => {
+          const post = state.posts.find((p) => p.id === postId);
+          if (post && post.userId !== comment.userId) {
+            const notification: Notification = {
+              id: Date.now().toString(),
+              userId: post.userId,
+              type: "comment",
+              fromUserId: comment.userId,
+              postId,
+              read: false,
+              createdAt: new Date().toISOString(),
+            };
+            return {
+              posts: state.posts.map((post) =>
+                post.id === postId
+                  ? { ...post, comments: [...post.comments, comment] }
+                  : post
+              ),
+              notifications: [...state.notifications, notification],
+            };
+          }
+          return {
+            posts: state.posts.map((post) =>
+              post.id === postId
+                ? { ...post, comments: [...post.comments, comment] }
+                : post
+            ),
+          };
+        }),
       toggleTheme: () =>
         set((state) => ({
           theme: state.theme === "light" ? "dark" : "light",
@@ -181,6 +239,16 @@ export const useStore = create<SocialState>()(
             createdAt: new Date().toISOString(),
           };
 
+          const notification: Notification = {
+            id: Date.now().toString(),
+            userId: toUserId,
+            type: "message",
+            fromUserId,
+            messageId: newMessage.id,
+            read: false,
+            createdAt: new Date().toISOString(),
+          };
+
           if (existingChat) {
             return {
               chats: state.chats.map((chat) =>
@@ -188,6 +256,7 @@ export const useStore = create<SocialState>()(
                   ? { ...chat, messages: [...chat.messages, newMessage] }
                   : chat
               ),
+              notifications: [...state.notifications, notification],
             };
           }
 
@@ -200,8 +269,30 @@ export const useStore = create<SocialState>()(
                 messages: [newMessage],
               },
             ],
+            notifications: [...state.notifications, notification],
           };
         }),
+      addNotification: (notification) =>
+        set((state) => ({
+          notifications: [...state.notifications, notification],
+        })),
+      markNotificationAsRead: (notificationId) =>
+        set((state) => ({
+          notifications: state.notifications.map((notification) =>
+            notification.id === notificationId
+              ? { ...notification, read: true }
+              : notification
+          ),
+        })),
+      markAllNotificationsAsRead: (userId) =>
+        set((state) => ({
+          notifications: state.notifications.map((notification) =>
+            notification.userId === userId
+              ? { ...notification, read: true }
+              : notification
+          ),
+        })),
+      clearUserNotifications: () => set({ notifications: [] }),
     }),
     {
       name: "social-storage",

@@ -3,7 +3,11 @@ import { Heart, MessageCircle, Hash } from "lucide-react";
 import { useStore } from "../store";
 import { Comment } from "../types";
 
-export const PostList = () => {
+interface PostListProps {
+  onViewProfile: (userId: string) => void;
+}
+
+export const PostList = ({ onViewProfile }: PostListProps) => {
   const { posts, users, currentUser, toggleLike, addComment, votePoll } =
     useStore();
   const [commentText, setCommentText] = useState<{ [key: string]: string }>({});
@@ -76,15 +80,23 @@ export const PostList = () => {
             >
               <div className="p-4">
                 <div className="flex items-center gap-3 mb-4">
-                  <img
-                    src={author.avatar}
-                    alt={author.name}
-                    className="w-10 h-10 rounded-full"
-                  />
+                  <button
+                    onClick={() => onViewProfile(author.id)}
+                    className="hover:opacity-80 transition-opacity"
+                  >
+                    <img
+                      src={author.avatar}
+                      alt={author.name}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                  </button>
                   <div>
-                    <h3 className="font-medium dark:text-white">
+                    <button
+                      onClick={() => onViewProfile(author.id)}
+                      className="font-medium dark:text-white hover:underline"
+                    >
                       {author.name}
-                    </h3>
+                    </button>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       {new Date(post.createdAt).toLocaleDateString()}
                     </p>
@@ -92,11 +104,13 @@ export const PostList = () => {
                 </div>
                 <p className="mb-4 dark:text-white">{post.content}</p>
                 {post.image && (
-                  <img
-                    src={post.image}
-                    alt="Post content"
-                    className="rounded-lg mb-4 max-h-96 w-full object-cover"
-                  />
+                  <div className="relative mb-4 pt-[56.25%]">
+                    <img
+                      src={post.image}
+                      alt="Post content"
+                      className="absolute inset-0 w-full h-full object-contain bg-black/5 dark:bg-black/20 rounded-lg"
+                    />
+                  </div>
                 )}
                 {post.tags && post.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-4">
@@ -203,16 +217,24 @@ export const PostList = () => {
 
                     return (
                       <div key={`comment-${comment.id}`} className="flex gap-2">
-                        <img
-                          src={commentAuthor.avatar}
-                          alt={commentAuthor.name}
-                          className="w-8 h-8 rounded-full"
-                        />
+                        <button
+                          onClick={() => onViewProfile(commentAuthor.id)}
+                          className="hover:opacity-80 transition-opacity"
+                        >
+                          <img
+                            src={commentAuthor.avatar}
+                            alt={commentAuthor.name}
+                            className="w-8 h-8 rounded-full object-cover"
+                          />
+                        </button>
                         <div className="flex-1">
                           <p className="text-sm dark:text-white">
-                            <span className="font-medium">
+                            <button
+                              onClick={() => onViewProfile(commentAuthor.id)}
+                              className="font-medium hover:underline"
+                            >
                               {commentAuthor.name}
-                            </span>{" "}
+                            </button>{" "}
                             {comment.content}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -229,7 +251,7 @@ export const PostList = () => {
                   <img
                     src={currentUser.avatar}
                     alt={currentUser.name}
-                    className="w-8 h-8 rounded-full"
+                    className="w-8 h-8 rounded-full object-cover"
                   />
                   <div className="flex-1 flex gap-2">
                     <input
